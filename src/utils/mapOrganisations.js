@@ -1,8 +1,12 @@
-const { urlPaths } = require('../constants');
-
-const buildOrganisationUrl = (org) => {
-  const urlPath = urlPaths[org.OrganisationTypeID];
-  return `https://www.nhs.uk/Services/${urlPath}/Overview/DefaultView.aspx?id=${org.NACSCode}`;
+const buildUrl = (org) => {
+  const urlPaths = {
+    GPB: 'gp',
+    DEN: 'dentists',
+    HOS: 'hospitals',
+    PHA: 'pharmacies',
+    OPT: 'opticians',
+  };
+  return `https://www.nhs.uk/Services/${urlPaths[org.OrganisationTypeID]}/Overview/DefaultView.aspx?id=${org.NACSCode}`;
 };
 
 const buildAddress = (org) => [
@@ -17,7 +21,7 @@ const buildAddress = (org) => [
 const mapOrganisations = (orgs) => orgs.map((org) => ({
   address: buildAddress(org),
   name: org.OrganisationName,
-  url: buildOrganisationUrl(org),
+  url: buildUrl(org),
 }));
 
 export default mapOrganisations;

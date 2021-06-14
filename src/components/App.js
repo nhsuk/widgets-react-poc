@@ -1,13 +1,37 @@
 import { useState } from 'react';
+
 import Search from './Search';
 import Results from './Results';
-import { defaultResults } from '../constants';
+
+import getOrganisations from '../utils/getOrganisations';
+import { services } from '../constants';
 
 function App() {
-  const [results, setResults] = useState(defaultResults);
+  const [service, setService] = useState('gp');
+  const [postcode, setPostcode] = useState('');
+  const [error, setError] = useState(false);
+  const [organisations, setOrganisations] = useState([]);
 
-  function reset() {
-    setResults(defaultResults);
+  async function handleSubmit(e) {
+    e.preventDefault();
+    try {
+      setOrganisations(await getOrganisations(postcode, service));
+      setError(false);
+    } catch (error) {
+      setError(true)
+    }
+  }
+
+  function handleService(e) {
+    setService(e.target.value);
+  }
+
+  function handlePostcode(e) {
+    setPostcode(e.target.value);
+  }
+  
+  function handleReset() {
+    setOrganisations([]);
   }
 
   return (
@@ -31,9 +55,21 @@ function App() {
         <main id="main-content" className="nhsuk-main-wrapper">
           <div className="nhsuk-grid-row">
             <div className="nhsuk-grid-column-full">
-              { results.query === '' ?
-                <Search setResults={setResults} /> :
-                <Results results={results} reset={reset} />
+              { organisations.length === 0 ?
+                <Search 
+                  handleSubmit={handleSubmit}
+                  service={service}
+                  handleService={handleService}
+                  postcode={postcode}
+                  handlePostcode={handlePostcode} 
+                  error={error}
+                /> :
+                <Results 
+                  organisations={organisations}
+                  handleReset={handleReset}
+                  title={services[service].resultsTitle}
+                  postcode={postcode}
+                />
               }
             </div>
           </div>

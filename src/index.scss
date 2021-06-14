@@ -7,3 +7,11 @@
 .app-results__list-item {
   border-bottom: solid 1px $nhsuk-border-color;
 }
+
+.nhsuk-back-link__link {
+  background: none;
+  appearance: none;
+  border: none;
+  padding: 0 0 0 16px;
+  color: $nhsuk-link-color;
+}
